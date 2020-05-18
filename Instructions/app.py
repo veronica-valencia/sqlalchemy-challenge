@@ -37,15 +37,15 @@ app = Flask(__name__)
 @app.route("/api/v1.0/precipitation")
 def precipitation():
     session = Session(engine)
-    results = session.query(Measurement.date, Measurement.prcp.filter(Measurement.date>='2016-08-23').order_by(Measurement.date)
-    precipitation_scores=[]
-    for s in results:
-        precipitation_dict={}
-        precipitation_dict["date"]= s.date
-        precipitation_dict["prcp"]=s.prcp
-        precipitation_scores.append(precipitation_dict)
+    results = session.query(Measurement.date, Measurement.prcp.filter(Measurement.date>='2016-08-23').order_by(Measurement.date))
     session.close()
-                            
+
+    precipitation_scores= []
+    for s in results:
+            precipitation_dict={}
+            precipitation_dict["date"]= s.date
+            precipitation_dict["prcp"]=s.prcp
+            precipitation_scores.append(precipitation_dict)
     return jsonify(precipitation_scores)
                             
 
@@ -63,7 +63,6 @@ def stations():
 
     # Convert list of tuples into normal list
     station_names = list(np.ravel(results))
-
     return jsonify(station_names)
                             
         
@@ -89,11 +88,11 @@ def temperature():
 def temperature_start():
     # Create our session (link) from Python to the DB
     session = Session(engine)
-    results = session.query(func.min(Measurement.tobs),func.avg(Measurement.tobs),func.max(Measurement.tobs).\
-             filter(Measurement.date>= start).all()
+    results = session.query(func.min(Measurement.tobs),func.avg(Measurement.tobs),func.max(Measurement.tobs)).\
+             filter(Measurement.date>=start).all()
 
 
-     session.close()
+    session.close()
  # Convert list of tuples into normal list
     temperature_start = list(np.ravel(results))
 
@@ -109,7 +108,7 @@ def temperature_end(start,end):
              filter(Measurement.date<=end).all()
 
 
-     session.close()
+    session.close()
  # Convert list of tuples into normal list
     temperature_end = list(np.ravel(results))
 
