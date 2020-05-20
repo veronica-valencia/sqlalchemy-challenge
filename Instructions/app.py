@@ -37,7 +37,7 @@ app = Flask(__name__)
 @app.route("/api/v1.0/precipitation")
 def precipitation():
     session = Session(engine)
-    results = session.query(Measurement.date, Measurement.prcp.filter(Measurement.date>='2016-08-23').order_by(Measurement.date))
+    results = session.query(Measurement.date, Measurement.prcp).filter(Measurement.date>='2016-08-23').order_by(Measurement.date)
     session.close()
 
     precipitation_scores= []
@@ -85,7 +85,7 @@ def temperature():
 
 
 @app.route("/api/v1.0/<start>")
-def temperature_start():
+def temperature_start(start):
     # Create our session (link) from Python to the DB
     session = Session(engine)
     results = session.query(func.min(Measurement.tobs),func.avg(Measurement.tobs),func.max(Measurement.tobs)).\
